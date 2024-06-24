@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { IoMoon } from "react-icons/io5";
-import { IoSunnyOutline } from "react-icons/io5";
+import { IoMoon, IoSunnyOutline } from "react-icons/io5";
 import "./App.css";
 
 function App() {
@@ -9,19 +8,25 @@ function App() {
 	const [wordCount, setWordCount] = useState([]);
 	const [charCount, setCharCount] = useState(0);
 	const [totalWords, setTotalWords] = useState(0);
-	const [theme, setTheme] = useState("light");
+	const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+	const [caseSensitive, setCaseSensitive] = useState(false);
+	const [longestWord, setLongestWord] = useState("");
+
+	useEffect(() => {
+		document.body.className = theme;
+		localStorage.setItem("theme", theme);
+	}, [theme]);
 
 	const onSubmit = () => {
-		const wordsArray = text.split(" ").filter((word) => word.trim() !== "");
-
+		const wordsArray = text.split(/\s+/).filter((word) => word.trim() !== "");
 		const count = {};
 
 		wordsArray.forEach((word) => {
-			const lowerWord = word.toLowerCase();
-			if (count[lowerWord]) {
-				count[lowerWord] += 1;
+			const processedWord = caseSensitive ? word : word.toLowerCase();
+			if (count[processedWord]) {
+				count[processedWord] += 1;
 			} else {
-				count[lowerWord] = 1;
+				count[processedWord] = 1;
 			}
 		});
 
@@ -29,6 +34,13 @@ function App() {
 		setWordCount(sortedCountArray);
 		setCharCount(text.length);
 		setTotalWords(wordsArray.length);
+		setLongestWord(
+			wordsArray.reduce(
+				(longest, current) =>
+					current.length > longest.length ? current : longest,
+				""
+			)
+		);
 	};
 
 	const clearText = () => {
@@ -36,6 +48,7 @@ function App() {
 		setWordCount([]);
 		setCharCount(0);
 		setTotalWords(0);
+		setLongestWord("");
 	};
 
 	const copyText = () => {
@@ -55,6 +68,10 @@ function App() {
 		setTheme(theme === "light" ? "dark" : "light");
 	};
 
+	const toggleCaseSensitivity = () => {
+		setCaseSensitive(!caseSensitive);
+	};
+
 	return (
 		<div
 			className={`min-h-screen w-full ${
@@ -62,15 +79,18 @@ function App() {
 			} flex items-center justify-center p-5`}
 		>
 			<button
-				className={`w-fit mt-2 py-2 px-2  text-white font-semibold rounded-full  focus:outline-none focus:ring-2 fixed top-8 right-10
-        ${
-					theme == "light"
-						? "bg-neutral-400  focus:ring-neutral-500"
-						: "bg-neutral-800  focus:ring-neutral-600"
+				className={`w-fit mt-2 py-2 px-2 text-white font-semibold rounded-full focus:outline-none focus:ring-2 fixed top-8 right-10 ${
+					theme === "light"
+						? "bg-neutral-400 focus:ring-neutral-500"
+						: "bg-neutral-800 focus:ring-neutral-600"
 				}`}
 				onClick={toggleTheme}
 			>
-				{theme == "light" ? <IoMoon size={28} /> : <IoSunnyOutline size={28} />}
+				{theme === "light" ? (
+					<IoMoon size={28} />
+				) : (
+					<IoSunnyOutline size={28} />
+				)}
 			</button>
 			<div
 				className={`max-w-2xl w-full ${
@@ -96,9 +116,17 @@ function App() {
 					value={text}
 					onChange={(e) => {
 						setText(e.target.value);
-						setTotalWords(
-							e.target.value.split(" ").filter((word) => word.trim() !== "")
-								.length
+						const wordsArray = e.target.value
+							.split(/\s+/)
+							.filter((word) => word.trim() !== "");
+						setTotalWords(wordsArray.length);
+						setCharCount(e.target.value.length);
+						setLongestWord(
+							wordsArray.reduce(
+								(longest, current) =>
+									current.length > longest.length ? current : longest,
+								""
+							)
 						);
 					}}
 				></textarea>
@@ -136,6 +164,22 @@ function App() {
 					</button>
 				</div>
 
+				<div className="flex gap-2 items-center mt-4">
+					<label
+						className={`text-lg font-semibold ${
+							theme === "light" ? "text-neutral-900" : "text-white"
+						}`}
+					>
+						Case Sensitive
+					</label>
+					<input
+						type="checkbox"
+						checked={caseSensitive}
+						onChange={toggleCaseSensitivity}
+						className="toggle-checkbox"
+					/>
+				</div>
+
 				<div className="flex gap-2">
 					<div className="mt-6 flex gap-2 w-1/2">
 						<h2
@@ -169,6 +213,23 @@ function App() {
 							{totalWords}
 						</p>
 					</div>
+				</div>
+
+				<div className="mt-6">
+					<h2
+						className={`text-xl font-semibold mb-4 ${
+							theme === "light" ? "text-neutral-900" : "text-white"
+						}`}
+					>
+						Longest Word:
+					</h2>
+					<p
+						className={`text-lg ${
+							theme === "light" ? "text-neutral-900" : "text-white"
+						}`}
+					>
+						{longestWord || "N/A"}
+					</p>
 				</div>
 
 				<div className="mt-6">
