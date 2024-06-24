@@ -105,7 +105,7 @@ function App() {
 					Word Counter
 				</h1>
 				<textarea
-					className={`w-full p-3 ${
+					className={`w-full p-3 bg-neutral-10 ${
 						theme === "light" ? "border-neutral-300" : "border-neutral-600"
 					} border rounded-md mb-4 focus:outline-none focus:ring-2 ${
 						theme === "light" ? "focus:ring-blue-400" : "focus:ring-blue-300"
@@ -133,16 +133,16 @@ function App() {
 				<div className="flex gap-2">
 					<button
 						className={`w-full py-2 px-4 ${
-							theme === "light" ? "bg-blue-500" : "bg-blue-700"
+							theme === "light" ? "bg-neutral-500" : "bg-neutral-700"
 						} text-white font-semibold rounded-md hover:${
-							theme === "light" ? "bg-blue-600" : "bg-blue-800"
-						} focus:outline-none focus:ring-2 focus:ring-blue-400`}
+							theme === "light" ? "bg-neutral-600" : "bg-neutral-800"
+						} focus:outline-none focus:ring-2 focus:ring-neutral-400`}
 						onClick={onSubmit}
 					>
 						Submit
 					</button>
 					<button
-						className="w-full py-2 px-4 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+						className="w-full py-2 px-4 bg-neutral-500 text-white font-semibold rounded-md hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400"
 						onClick={clearText}
 					>
 						Clear
@@ -151,13 +151,13 @@ function App() {
 
 				<div className="flex gap-2">
 					<button
-						className="w-full mt-2 py-2 px-4 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+						className="w-full mt-2 py-2 px-4 bg-neutral-500 text-white font-semibold rounded-md hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400"
 						onClick={copyText}
 					>
 						Copy Text
 					</button>
 					<button
-						className="w-full mt-2 py-2 px-4 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+						className="w-full mt-2 py-2 px-4 bg-neutral-500 text-white font-semibold rounded-md hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-400"
 						onClick={copyWordCount}
 					>
 						Copy Word Count
